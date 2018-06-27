@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Donelist"
+                android:textSize="20dp"
+                android:fontFamily="monospace"
+                android:textAlignment="textEnd"
+                android:paddingBottom="3dp"
+                android:paddingTop="3dp"
+                android:paddingRight="15dp"
+                android:background="#551aed3d"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/dynamicArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp">
+            <TextView
+                android:id="@+id/tempView"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@drawable/envelope"
+                android:layout_margin="10dp"
+                android:textAlignment="center"
+                android:text="리스트가 없습니다"
+                android:textColor="#ff0000"
+                android:paddingTop="31dp"
+                android:textSize="30dp"/>
+
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom">
+            <ImageButton
+                android:id="@+id/setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/setting_size30"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/transparent"/>
+            <ImageButton
+                android:id="@+id/plus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/plus_size50"
+                android:layout_alignParentRight="true"
+                android:background="@android:color/transparent"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
