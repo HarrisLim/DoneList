@@ -27,46 +27,62 @@
                 android:paddingRight="15dp"
                 android:background="#551aed3d"/>
         </LinearLayout>
-        <LinearLayout
-            android:id="@+id/dynamicArea"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="20dp">
-            <TextView
-                android:id="@+id/tempView"
+            <LinearLayout
+                android:id="@+id/dynamicArea"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@drawable/envelope"
-                android:layout_margin="10dp"
-                android:textAlignment="center"
-                android:text="리스트가 없습니다"
-                android:textColor="#ff0000"
-                android:paddingTop="31dp"
-                android:textSize="30dp"/>
-
-        </LinearLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="bottom">
-            <ImageButton
-                android:id="@+id/setting"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/setting_size30"
-                android:layout_alignParentLeft="true"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/transparent"/>
-            <ImageButton
-                android:id="@+id/plus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/plus_size50"
-                android:layout_alignParentRight="true"
-                android:background="@android:color/transparent"/>
-        </RelativeLayout>
-
+                android:orientation="vertical"
+                android:layout_marginTop="20dp"
+                android:paddingRight="5dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="List"
+                    android:fontFamily="monospace"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:textSize="30dp"/>
+                <ListView
+                    android:id="@+id/listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="#ff0000"
+                    android:dividerHeight="1dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:footerDividersEnabled="true">
+                </ListView>
+                <TextView
+                    android:id="@+id/tempView"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@drawable/envelope"
+                    android:layout_margin="10dp"
+                    android:textAlignment="center"
+                    android:text="리스트가 없습니다"
+                    android:textColor="#ff0000"
+                    android:paddingTop="31dp"
+                    android:textSize="30dp"/>
+            </LinearLayout>
     </LinearLayout>
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom">
+        <ImageButton
+            android:id="@+id/setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/setting"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/transparent"/>
+        <ImageButton
+            android:id="@+id/plus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/plus_size50"
+            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent"/>
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
