@@ -1,30 +1,89 @@
 package apps.harrislim.donelist;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
+import java.sql.Time;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.Executors;
+
 public class CalendarActivity extends AppCompatActivity {
+    SharedPreferences setting;
+    SharedPreferences.Editor editor;
     TextView ct;
     Intent i_self;
     private final OneDayDecorator oneDayDecorator = new OneDayDecorator();
     MaterialCalendarView materialCalendarView;
+    ArrayList<String> result = new ArrayList<String>();
 
     void customizeCalendar(){
         materialCalendarView = (MaterialCalendarView)findViewById(R.id.calendarView);
         materialCalendarView.addDecorators(
                 new SundayDecorator(),
                 new SaturdayDecorator(),
-                oneDayDecorator);
-        materialCalendarView.setSelectionMode(MaterialCalendarView.SELECTION_MODE_MULTIPLE);
+                new OneDayDecorator());
+//        materialCalendarView.setSelectionMode(MaterialCalendarView.SELECTION_MODE_MULTIPLE);
+        materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+
+//                boolean isDuplicate = isDuplicate(date);
+                if(isDuplicate(date)) {
+                    Log.i("tag", "겹침");
+                    result.remove(getDate(date));
+                    editor.remove(getDate(date));
+                    editor.commit();
+//                    Intent intent = new Intent(CalendarActivity.this, CalendarActivity.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    finish();
+                    startActivity(getIntent());
+                }
+                else {
+                    Log.i("tag", "안겹침");
+                    result.add(getDate(date));
+                    editor.putString(getDate(date), getDate(date));
+                    editor.commit();
+                    // 생성될 때 onResume에 안걸리고 ApiSimulator가 여기서 실행되니까
+                    new ApiSimulator(result).executeOnExecutor(Executors.newSingleThreadExecutor());
+                }
+                Log.i("tag", "hi: "+ setting.getString(getDate(date),null));
+//                new ApiSimulator(result).executeOnExecutor(Executors.newSingleThreadExecutor());
+            }
+        });
+    }
+    boolean isDuplicate(CalendarDay date){
+        for(int i=0; i<result.size(); i++){
+            if(result.get(i).equals(getDate(date))){
+                return true;
+            }
+        }
+        return false;
+    }
+    String getDate(CalendarDay date){
+        String str = date.toString();
+        int a = str.indexOf("{");
+        int b = str.indexOf("}");
+        str = str.substring(a+1, b);
+        return str;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i("onCreate","onCreate!!");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
 
@@ -32,9 +91,91 @@ public class CalendarActivity extends AppCompatActivity {
         i_self = getIntent();
         String title = i_self.getStringExtra("title");
         ct.setText(title);
+        setting = getSharedPreferences("setting", 0);
+        editor= setting.edit();
+//        String[] str = setting.getAll();
+
+//        Log.i("tag", "getAll: "+setting.getAll().size());
+//        Iterator<String> keys = setting.getAll().keySet().iterator();
+//        while(keys.hasNext()){
+//            String key = keys.next();
+//            result.add(key);
+//        }
+
+//        setting.getString(getDate(date),null);
 
         customizeCalendar();
     }
+    @Override
+    public void onResume(){
+        Log.i("tag", "이건 언제돼?");
+//        customizeCalendar();
+        Log.i("tag", "getAll: "+setting.getAll().size());
+        Iterator<String> keys = setting.getAll().keySet().iterator();
+        while(keys.hasNext()){
+            String key = keys.next();
+            result.add(key);
+        }
+        // 지울 때 onResume이 실행되니까 ApiSimulator를 여기에.
+        new ApiSimulator(result).executeOnExecutor(Executors.newSingleThreadExecutor());
+        super.onResume();
+    }
+    private class ApiSimulator extends AsyncTask<Void, Void, List<CalendarDay>> {
+        ArrayList<String> Time_Result;
+//        boolean isDuplicate;
+//        ApiSimulator(ArrayList<String> Time_Result, boolean isDuplicate){
+        ApiSimulator(ArrayList<String> Time_Result){
+            this.Time_Result = Time_Result;
+//            this.isDuplicate = isDuplicate;
+        }
+        @Override
+        protected List<CalendarDay> doInBackground(@NonNull Void... voids) {
+//            try {
+//                Thread.sleep(500);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+            if (result.size() > 0) {
+                Calendar calendar = Calendar.getInstance();
+                ArrayList<CalendarDay> dates = new ArrayList<>();
+                /*특정날짜 달력에 점표시해주는곳*/
+                /*월은 0이 1월 년,일은 그대로*/
+                //string 문자열인 Time_Result 을 받아와서 ,를 기준으로짜르고 string을 int 로 변환
+                for(int i = 0 ; i < Time_Result.size() ; i ++){
+                    CalendarDay day = CalendarDay.from(calendar);
+                    String[] time = Time_Result.get(i).split("-"); // .하면 안돼
+                    int year = Integer.parseInt(time[0]);
+                    int month = Integer.parseInt(time[1]);
+                    int dayy = Integer.parseInt(time[2]);
+
+                    dates.add(day);
+                    calendar.set(year, month, dayy);
+                }
+                dates.set(0, null); // 오늘 날짜를 추가하지 않아도 추가되어서 삭제.
+                dates.add(CalendarDay.from(calendar)); // 배열 마지막 날짜가 안들어가서 직접 추가.
+                return dates;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(@NonNull List<CalendarDay> calendarDays) {
+//            밑의 걸로 통계 나타내
+//            for(CalendarDay x: calendarDays) Log.i("tag", "taotal: "+ x);
+            super.onPostExecute(calendarDays);
+            if (isFinishing()) {
+                return;
+            }
+            if(calendarDays!=null) {// 빨간 점이 1개 이상일 때만
+//                Log.i("tag", "size: " + calendarDays.size());
+                materialCalendarView.addDecorator(new EventDecorator(Color.RED, calendarDays, CalendarActivity.this));
+            }
+//            }else if(isDuplicate){ // 겹치면
+//                materialCalendarView.addDecorator(new EventDecorator(Color.argb(00,00,00,00), calendarDays, CalendarActivity.this));
+//            }
+        }
+    }
+
 }
 
 /*
