@@ -2,7 +2,9 @@ package apps.harrislim.donelist;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import android.widget.Toast;
 import org.w3c.dom.Text;
 
 import java.util.*;
+import java.util.concurrent.Executors;
 
 import apps.harrislim.donelist.R;
 
@@ -38,11 +41,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ListView lv;
     ArrayList<Integer> viewIdList = new ArrayList<Integer>();
     ArrayList<String> items = new ArrayList<String>();
+    SharedPreferences listPre;
+    SharedPreferences.Editor editor;
+    String title;
 
     boolean deletable = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i("tag", "onCreate in Main");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         r = getResources();
@@ -56,6 +63,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         plus.setOnClickListener(this);
         setting.setOnClickListener(this);
+
+        listPre = getSharedPreferences("list", 0);
+        editor= listPre.edit();
+
+        emptyView = (TextView)findViewById(R.id.tempView);
+        topLL = (android.widget.LinearLayout)findViewById(R.id.dynamicArea);
+        makeTempView();
+    }
+    void makeTempView(){
+        Log.i("tag", "size: "+ listPre.getAll().size());
+//        if(listPre.getAll().size() < 0){
+//            emptyView.setText("리스트가 없습니다");
+//            emptyView.setBackground(ContextCompat.getDrawable(this, R.drawable.envelope));
+//        }else{
+        if(listPre.getAll().size() > 0){
+            topLL.removeView(emptyView);
+            m2();
+        }
+    }
+
+    @Override
+    public void onResume(){
+        Log.i("tag", "onResume in Main");
+        super.onResume();
+    }
+
+    @Override
+    public void onRestart(){
+        Log.i("tag", "onRestart in Main");
+        super.onRestart();
+    }
+
+    @Override
+    public void onStart(){
+        Log.i("tag", "onStart in Main");
+        super.onStart();
+    }
+
+    @Override
+    public void onPause(){
+        Log.i("tag", "onPause in Main");
+        super.onPause();
     }
 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id){
@@ -66,13 +115,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     int positionIdx;
     void m2(){
         list = new Vector<String>();
+//        Log.i("tag", "list.size(): "+list.size()+", items.size(): "+items.size());
+//        if(list.size()>0 || items.size()>0) {
+            list.removeAll(list);
+            items.removeAll(items);
+//        }
+        Iterator<String> keys = listPre.getAll().keySet().iterator();
+        Log.i("tag", "listPre.size(): "+listPre.getAll().size());
+        while(keys.hasNext()){
+            String key = keys.next();
+            items.add(key);
+        }
+        Log.i("tag", "items.size(): "+items.size());
         for(String item: items) {
             list.add(item);
         }
-        aa = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
+        Log.i("tag", "list.size(): "+list.size());
+        aa = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, items);
         lv.setAdapter(aa);
-
-        // textSize 변경하기 위한 코드
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -86,9 +146,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (which == DialogInterface.BUTTON_POSITIVE) {
-                                String tempTitle = list.get(positionIdx).toString();
+                                String tempTitle = items.get(positionIdx).toString();
                                 Log.i("tag", "te: "+positionIdx);
                                 items.remove(positionIdx);
+                                editor.remove(tempTitle);
+                                editor.commit();
                                 list.remove(positionIdx);
                                 lv.setAdapter(aa);
                                 Toast.makeText(MainActivity.this,
@@ -129,9 +191,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         okBtn = (Button)view.findViewById(R.id.okBtn);
         cancelBtn = (Button)view.findViewById(R.id.cancelBtn);
-        emptyView = (TextView)findViewById(R.id.tempView);
+//        emptyView = (TextView)findViewById(R.id.tempView);
         addList = (EditText)view.findViewById(R.id.addListText);
-        topLL = (android.widget.LinearLayout)findViewById(R.id.dynamicArea);
+//        topLL = (android.widget.LinearLayout)findViewById(R.id.dynamicArea);
         topTV1 = new android.widget.TextView(MainActivity.this);
         inte = new Intent(MainActivity.this, CalendarActivity.class);
 
@@ -146,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
 
             public void onClick(View view) {
-                String title = addList.getText().toString().trim();
+                title = addList.getText().toString().trim();
                 if(title.length()>20) {
                     Toast.makeText(MainActivity.this, "20글자를 초과할 수 없습니다.", Toast.LENGTH_SHORT).show();
                 } else if(hasDuplicate(title)){ // list 중복검사
@@ -156,7 +218,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if(emptyView!=null){
                         topLL.removeView(emptyView);
                      }
-                    items.add(title);
+//                    items.add(title);
+                    editor.putString(title, title);
+                    editor.commit();
                     m2();
                     alert.dismiss();
                 }

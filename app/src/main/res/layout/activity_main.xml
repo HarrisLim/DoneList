@@ -56,12 +56,12 @@
                     android:id="@+id/tempView"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
-                    android:background="@drawable/envelope"
                     android:layout_margin="10dp"
                     android:textAlignment="center"
-                    android:text="리스트가 없습니다"
                     android:textColor="#ff0000"
                     android:paddingTop="31dp"
+                    android:text="리스트가 없습니다"
+                    android:background="@drawable/envelope"
                     android:textSize="30dp"/>
             </LinearLayout>
     </LinearLayout>

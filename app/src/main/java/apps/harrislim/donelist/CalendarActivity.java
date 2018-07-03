@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -21,12 +23,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-public class CalendarActivity extends AppCompatActivity {
-    SharedPreferences setting;
+public class CalendarActivity extends AppCompatActivity implements View.OnClickListener {
+    SharedPreferences calendarPre;
     SharedPreferences.Editor editor;
-    TextView ct;
     Intent i_self;
+    String title;
+    TextView ct;
+    Button totalButton;
+    ArrayList<String> dayList = new ArrayList<String>();
     private final OneDayDecorator oneDayDecorator = new OneDayDecorator();
+
     MaterialCalendarView materialCalendarView;
     ArrayList<String> result = new ArrayList<String>();
 
@@ -60,7 +66,7 @@ public class CalendarActivity extends AppCompatActivity {
                     // 생성될 때 onResume에 안걸리고 ApiSimulator가 여기서 실행되니까
                     new ApiSimulator(result).executeOnExecutor(Executors.newSingleThreadExecutor());
                 }
-                Log.i("tag", "hi: "+ setting.getString(getDate(date),null));
+                Log.i("tag", "hi: "+ calendarPre.getString(getDate(date),null));
 //                new ApiSimulator(result).executeOnExecutor(Executors.newSingleThreadExecutor());
             }
         });
@@ -85,38 +91,58 @@ public class CalendarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.i("onCreate","onCreate!!");
         super.onCreate(savedInstanceState);
+        i_self = getIntent();
+        title = i_self.getStringExtra("title");
         setContentView(R.layout.activity_calendar);
 
+        totalButton = (Button)findViewById(R.id.totalButton);
+        totalButton.setOnClickListener(this);
         ct = (TextView) findViewById(R.id.calendarTitle);
-        i_self = getIntent();
-        String title = i_self.getStringExtra("title");
         ct.setText(title);
-        setting = getSharedPreferences("setting", 0);
-        editor= setting.edit();
-//        String[] str = setting.getAll();
+        calendarPre = getSharedPreferences(title, 0);
+        editor= calendarPre.edit();
 
-//        Log.i("tag", "getAll: "+setting.getAll().size());
-//        Iterator<String> keys = setting.getAll().keySet().iterator();
+//        String[] str = calendarPre.getAll();
+
+//        Log.i("tag", "getAll: "+calendarPre.getAll().size());
+//        Iterator<String> keys = calendarPre.getAll().keySet().iterator();
 //        while(keys.hasNext()){
 //            String key = keys.next();
 //            result.add(key);
 //        }
 
-//        setting.getString(getDate(date),null);
+//        calendarPre.getString(getDate(date),null);
 
         customizeCalendar();
+    }
+
+
+    @Override
+    public void onClick(View v){
+        Log.i("tag", "in onClick in CalendarActivity");
+        switch (v.getId()){
+            case R.id.totalButton: toTotal(); break;
+        }
+    }
+    void toTotal(){
+        Log.i("tag", "in toTotal in CalendarActivity");
+        Intent inte = new Intent(CalendarActivity.this, TotalActivity.class);
+        inte.putStringArrayListExtra("dayList", dayList);
+        inte.putExtra("title", title);
+        startActivity(inte);
     }
     @Override
     public void onResume(){
         Log.i("tag", "이건 언제돼?");
 //        customizeCalendar();
-        Log.i("tag", "getAll: "+setting.getAll().size());
-        Iterator<String> keys = setting.getAll().keySet().iterator();
+        Log.i("tag", "getAll: "+calendarPre.getAll().size());
+        Iterator<String> keys = calendarPre.getAll().keySet().iterator();
         while(keys.hasNext()){
             String key = keys.next();
             result.add(key);
         }
         // 지울 때 onResume이 실행되니까 ApiSimulator를 여기에.
+        dayList.removeAll(dayList);
         new ApiSimulator(result).executeOnExecutor(Executors.newSingleThreadExecutor());
         super.onResume();
     }
@@ -160,8 +186,24 @@ public class CalendarActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(@NonNull List<CalendarDay> calendarDays) {
-//            밑의 걸로 통계 나타내
-//            for(CalendarDay x: calendarDays) Log.i("tag", "taotal: "+ x);
+            if(calendarDays==null)
+                Log.i("tag", "null이야");
+            else if(calendarDays!=null){
+                Log.i("tag", "null아니야 ");
+//                for(CalendarDay x: calendarDays) Log.i("tag", "calendarDays: "+ calendarDays);
+                Log.i("tag", "calendarDays: "+ calendarDays.size());
+            }
+            if(calendarDays!=null){
+                dayList.removeAll(dayList);
+                for(int i=1; i<calendarDays.size(); i++){ // 0은 null이 있어.
+//                    for(int j=0; j<dayList.size(); j++){
+//                        if(!(calendarDays.get(i).toString().equals(dayList.get(j)))){
+                            dayList.add(getDate(calendarDays.get(i)));
+//                        }
+//                    }
+                }
+                for(String d: dayList) Log.i("tag", "dddd: "+ d);
+            }
             super.onPostExecute(calendarDays);
             if (isFinishing()) {
                 return;
