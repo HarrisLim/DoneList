@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     void m2(){
         list = new Vector<String>();
 //        Log.i("tag", "list.size(): "+list.size()+", items.size(): "+items.size());
-//        if(list.size()>0 || items.size()>0) {
+//        if(list.size()>0 || items.size()>0) {.........................
             list.removeAll(list);
             items.removeAll(items);
 //        }
@@ -148,9 +148,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             if (which == DialogInterface.BUTTON_POSITIVE) {
                                 String tempTitle = items.get(positionIdx).toString();
                                 Log.i("tag", "te: "+positionIdx);
+                                Log.i("tag", "tempTitle: "+tempTitle);
                                 items.remove(positionIdx);
                                 editor.remove(tempTitle);
                                 editor.commit();
+
+                                Iterator<String> keys = listPre.getAll().keySet().iterator();
+
+                                while(keys.hasNext()){
+                                    String key = keys.next();
+                                    Log.i("tag", "key: "+key);
+                                }
                                 list.remove(positionIdx);
                                 lv.setAdapter(aa);
                                 Toast.makeText(MainActivity.this,

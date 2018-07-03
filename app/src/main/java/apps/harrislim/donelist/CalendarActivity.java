@@ -55,6 +55,9 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
                     editor.commit();
 //                    Intent intent = new Intent(CalendarActivity.this, CalendarActivity.class);
 //                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                    widget.refreshDrawableState();
+//                    materialCalendarView.refreshDrawableState();
+//                    materialCalendarView.invalidateDecorators();
                     finish();
                     startActivity(getIntent());
                 }
