@@ -111,13 +111,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ArrayAdapter<String> aa = (ArrayAdapter<String>)parent.getAdapter();
     }
     ArrayAdapter<String> aa;
-    List list;
+//    List list;
     int positionIdx;
     void m2(){
-        list = new Vector<String>();
+//        list = new Vector<String>();
 //        Log.i("tag", "list.size(): "+list.size()+", items.size(): "+items.size());
 //        if(list.size()>0 || items.size()>0) {.........................
-            list.removeAll(list);
+//            list.removeAll(list);
             items.removeAll(items);
 //        }
         Iterator<String> keys = listPre.getAll().keySet().iterator();
@@ -127,10 +127,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             items.add(key);
         }
         Log.i("tag", "items.size(): "+items.size());
-        for(String item: items) {
-            list.add(item);
-        }
-        Log.i("tag", "list.size(): "+list.size());
+//        for(String item: items) {
+//            list.add(item);
+//        }
+//        Log.i("tag", "list.size(): "+list.size());
+        Collections.sort(items);
         aa = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, items);
         lv.setAdapter(aa);
 
@@ -159,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     String key = keys.next();
                                     Log.i("tag", "key: "+key);
                                 }
-                                list.remove(positionIdx);
+//                                list.remove(positionIdx);
                                 lv.setAdapter(aa);
                                 Toast.makeText(MainActivity.this,
                                         tempTitle + "이(가) 삭제되었습니다.", Toast.LENGTH_SHORT).show();

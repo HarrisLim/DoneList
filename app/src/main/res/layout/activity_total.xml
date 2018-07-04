@@ -32,18 +32,7 @@ tools:context=".CalendarActivity">
                 android:textColor="#000000"
                 android:textAlignment="center"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="25dp"
-                android:background="#ffffff"/>
-            <ListView
-                android:id="@+id/totalListview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="#ff0000"
-                android:dividerHeight="1dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:footerDividersEnabled="true">
-            </ListView>
+                android:layout_marginBottom="25dp"/>
         </LinearLayout>
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chart"

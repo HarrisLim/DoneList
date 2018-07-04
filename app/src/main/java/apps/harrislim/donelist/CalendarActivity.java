@@ -16,7 +16,6 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -129,7 +128,7 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
     }
     void toTotal(){
         Log.i("tag", "in toTotal in CalendarActivity");
-        Intent inte = new Intent(CalendarActivity.this, TotalActivity.class);
+        Intent inte = new Intent(CalendarActivity.this, YearListActivity.class);
         inte.putStringArrayListExtra("dayList", dayList);
         inte.putExtra("title", title);
         startActivity(inte);

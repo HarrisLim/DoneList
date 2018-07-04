@@ -22,17 +22,18 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 public class TotalActivity extends AppCompatActivity {
     TextView totalTitle;
-    ListView totalListview;
     String title;
     Intent i_self;
-    ArrayList<String> dayList = new ArrayList<String>();
+    ArrayList<String> monthList = new ArrayList<String>();
     HashMap<Integer, String> labels;
     LineChart lineChart;
+    int max;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,33 +42,15 @@ public class TotalActivity extends AppCompatActivity {
 
         i_self = getIntent();
         title = i_self.getStringExtra("title");
-        dayList = i_self.getStringArrayListExtra("dayList");
+        monthList = i_self.getStringArrayListExtra("monthList");
         totalTitle = (TextView) findViewById(R.id.totalTitle);
-        totalListview = (ListView) findViewById(R.id.totalListview);
         totalTitle.setText(title);
-        for(int i=0; i<dayList.size(); i++){
-            Log.i("tag", "haha: "+dayList.get(i));
-        }
 
         lineChart = (LineChart)findViewById(R.id.chart);
         List<Entry> entries = new ArrayList<>();
-//        for(int i=1; i<13; i++){ // 여기 스위치로 맞는 달이 있다면 넣자.
-//            entries.add(new Entry(i, 31));
-//        }
-
-        // 이거 임시야. 위에 달 별로 데이터 가져와서 이거 위에 for문으로 바꿔.
-        entries.add(new Entry(1, 4));
-        entries.add(new Entry(2, 1));
-        entries.add(new Entry(3, 7));
-        entries.add(new Entry(4, 24));
-        entries.add(new Entry(5, 5));
-        entries.add(new Entry(6, 17));
-        entries.add(new Entry(7, 20));
-        entries.add(new Entry(8, 9));
-        entries.add(new Entry(9, 0));
-        entries.add(new Entry(10, 4));
-        entries.add(new Entry(11, 16));
-        entries.add(new Entry(12, 27));
+        for(int i=0; i<12; i++){ // 여기 스위치로 맞는 달이 있다면 넣자.
+            entries.add(new Entry(i+1, Integer.parseInt(monthList.get(i))));
+        }
 
         labels = new HashMap<Integer, String>();
         labels.put(1, "Jan.");
@@ -111,8 +94,27 @@ public class TotalActivity extends AppCompatActivity {
             }
         });
 
+        ArrayList<String> tempList = monthList;
+        Collections.sort(tempList);
+        max = Integer.parseInt(tempList.get(tempList.size()-1));
+
         YAxis yLAxis = lineChart.getAxisLeft();
         yLAxis.setTextColor(Color.BLACK);
+        /*
+        if(max<=7){
+            yLAxis.setAxisMinimum(0f); // start at zero
+            yLAxis.setLabelCount(2);
+            yLAxis.setAxisMaximum(10f);
+        }else if(max<=17){
+            yLAxis.setAxisMinimum(0f); // start at zero
+            yLAxis.setLabelCount(4);
+            yLAxis.setAxisMaximum(20f);
+        }else{ // 18이상이라면
+            yLAxis.setAxisMinimum(0f); // start at zero
+            yLAxis.setLabelCount(7);
+            yLAxis.setAxisMaximum(35f);
+        }
+        */
         yLAxis.setAxisMinimum(0f); // start at zero
         yLAxis.setLabelCount(7);
         yLAxis.setAxisMaximum(35f);

@@ -37,7 +37,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="List"
+                    android:text="목록"
                     android:fontFamily="monospace"
                     android:layout_marginLeft="20dp"
                     android:layout_marginBottom="10dp"

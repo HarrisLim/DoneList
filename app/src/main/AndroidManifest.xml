@@ -21,7 +21,8 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".CalendarActivity" />
-        <activity android:name=".TotalActivity"></activity>
+        <activity android:name=".TotalActivity" />
+        <activity android:name=".YearListActivity"></activity>
     </application>
 
 </manifest>
