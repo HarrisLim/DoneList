@@ -1,5 +1,5 @@
 # [Donelist](https://play.google.com/store/apps/details?id=apps.harrislim.donelist)
-  "Just mark make you go to the goal" - HarrisLim<br>
+  **"Just mark make you go to the goal" - HarrisLim**<br><br>
   Just mark somethings you did and check out whether running well or not !!<br>
   It give you to power of untiring and motivation. <br>
   <br><br>
@@ -20,6 +20,7 @@
   - how to delete the list
     1. click the sawtooth button in the lower left.
     2. you can delete when clicking the list while the sawtooth button's color is white.
+    <br>
 <hr/>
 
 ### Version
