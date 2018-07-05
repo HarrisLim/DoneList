@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ArrayList<Integer> viewIdList = new ArrayList<Integer>();
     ArrayList<String> items = new ArrayList<String>();
     SharedPreferences listPre;
+    SharedPreferences dataPre;
     SharedPreferences.Editor editor;
     String title;
 
@@ -73,10 +74,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     void makeTempView(){
         Log.i("tag", "size: "+ listPre.getAll().size());
-//        if(listPre.getAll().size() < 0){
-//            emptyView.setText("리스트가 없습니다");
-//            emptyView.setBackground(ContextCompat.getDrawable(this, R.drawable.envelope));
-//        }else{
         if(listPre.getAll().size() > 0){
             topLL.removeView(emptyView);
             m2();
@@ -111,15 +108,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ArrayAdapter<String> aa = (ArrayAdapter<String>)parent.getAdapter();
     }
     ArrayAdapter<String> aa;
-//    List list;
     int positionIdx;
     void m2(){
-//        list = new Vector<String>();
-//        Log.i("tag", "list.size(): "+list.size()+", items.size(): "+items.size());
-//        if(list.size()>0 || items.size()>0) {.........................
-//            list.removeAll(list);
             items.removeAll(items);
-//        }
         Iterator<String> keys = listPre.getAll().keySet().iterator();
         Log.i("tag", "listPre.size(): "+listPre.getAll().size());
         while(keys.hasNext()){
@@ -127,10 +118,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             items.add(key);
         }
         Log.i("tag", "items.size(): "+items.size());
-//        for(String item: items) {
-//            list.add(item);
-//        }
-//        Log.i("tag", "list.size(): "+list.size());
         Collections.sort(items);
         aa = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, items);
         lv.setAdapter(aa);
@@ -141,41 +128,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 positionIdx = position;
                 if(deletable){
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setTitle("알림");
-                    builder.setMessage("정말 삭제하시겠습니까?");
+                    builder.setTitle(R.string.DeleteTitle);
+                    builder.setMessage(R.string.noticeInDelete);
                     DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (which == DialogInterface.BUTTON_POSITIVE) {
-                                String tempTitle = items.get(positionIdx).toString();
+                                String tempTitle = items.get(positionIdx);
                                 Log.i("tag", "te: "+positionIdx);
                                 Log.i("tag", "tempTitle: "+tempTitle);
+                                Log.i("tag", "items.size(): "+items.size());
                                 items.remove(positionIdx);
+                                editor= listPre.edit();
                                 editor.remove(tempTitle);
                                 editor.commit();
+                                dataPre = getSharedPreferences(tempTitle, 0);
+                                editor = dataPre.edit();
+                                editor.clear();
+                                editor.commit();
+
+                                editor= listPre.edit();
 
                                 Iterator<String> keys = listPre.getAll().keySet().iterator();
-
+                                for(String z: items) Log.i("tag", "items: "+z );
                                 while(keys.hasNext()){
                                     String key = keys.next();
                                     Log.i("tag", "key: "+key);
                                 }
-//                                list.remove(positionIdx);
                                 lv.setAdapter(aa);
-                                Toast.makeText(MainActivity.this,
-                                        tempTitle + "이(가) 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                                Resources res = getResources();
+                                String text = String.format(res.getString(R.string.confirmDeleting), tempTitle);
+                                Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
                             } else {
                                 return;
                             }
                         }
                     };
-                    builder.setPositiveButton("예", listener);
-                    builder.setNegativeButton("아니오", listener);
+
+                    builder.setPositiveButton(R.string.yes, listener);
+                    builder.setNegativeButton(R.string.no, listener);
                     builder.show();
                 }else {
-                    // 여기 달력 들어가는 곳.
-//                    Toast.makeText(MainActivity.this,
-//                            "선택(list) : " + aa.getItem(position), Toast.LENGTH_SHORT).show();
                     inte = new Intent(MainActivity.this, CalendarActivity.class);
                     inte.putExtra("title", aa.getItem(position));
                     startActivity(inte);
@@ -193,16 +186,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void plus(){
 
         builder = new AlertDialog.Builder(this);
-        builder.setTitle("목록 추가");
+        builder.setTitle(R.string.addListTitle);
         View view = View.inflate(this, R.layout.custom, null);
         builder.setView(view);
         alert = builder.create();
 
         okBtn = (Button)view.findViewById(R.id.okBtn);
         cancelBtn = (Button)view.findViewById(R.id.cancelBtn);
-//        emptyView = (TextView)findViewById(R.id.tempView);
         addList = (EditText)view.findViewById(R.id.addListText);
-//        topLL = (android.widget.LinearLayout)findViewById(R.id.dynamicArea);
         topTV1 = new android.widget.TextView(MainActivity.this);
         inte = new Intent(MainActivity.this, CalendarActivity.class);
 
@@ -219,15 +210,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View view) {
                 title = addList.getText().toString().trim();
                 if(title.length()>20) {
-                    Toast.makeText(MainActivity.this, "20글자를 초과할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.limitString, Toast.LENGTH_SHORT).show();
                 } else if(hasDuplicate(title)){ // list 중복검사
-                    Toast.makeText(MainActivity.this, "중복되는 목록이 있습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.unduplicatable, Toast.LENGTH_SHORT).show();
                 }else {
-                    Toast.makeText(MainActivity.this, "\""+title+"\" 추가", Toast.LENGTH_SHORT).show();
+                    Resources res = getResources();
+                    String text = String.format(res.getString(R.string.add), title);
+                    Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
                     if(emptyView!=null){
                         topLL.removeView(emptyView);
                      }
-//                    items.add(title);
                     editor.putString(title, title);
                     editor.commit();
                     m2();
@@ -252,10 +244,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     public void setting(){
         if(deletable){ // 지우기 멈춤
-            Toast.makeText(this, "삭제 비활성화", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.undeletable, Toast.LENGTH_SHORT).show();
             setting.setImageResource(R.drawable.setting);
         }else{ // 지우기 시작
-            Toast.makeText(this, "삭제 활성화", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.deletable, Toast.LENGTH_SHORT).show();
             setting.setImageResource(R.drawable.unsetting);
         }
         settingToggle();

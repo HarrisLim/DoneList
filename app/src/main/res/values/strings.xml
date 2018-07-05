@@ -1,4 +1,23 @@
 <resources>
     <string name="app_name">Donelist</string>
     <string name="action_settings">Settings</string>
+    <string name="listTitle">List</string>
+    <string name="emptyList">no list</string>
+    <string name="addListTitle">Add list</string>
+    <string name="addListHint">enter list</string>
+    <string name="addListCancel">cancel</string>
+    <string name="addListOk">ok</string>
+    <string name="deletable">deletable</string>
+    <string name="undeletable">undeletable</string>
+    <string name="statistics">Statistics</string>
+    <string name="noticeInStat">* show the lists you checked</string>
+    <string name="limitString">limits 20 letter</string>
+    <string name="unduplicatable">the name is already on the list</string>
+    <string name="add">added %1$s</string>
+    <string name="DeleteTitle">Notice</string>
+    <string name="noticeInDelete">Do you want to delete?</string>
+    <string name="no">no</string>
+    <string name="yes">yes</string>
+    <string name="confirmDeleting">deleted %1$s</string>
+    <string name="doneCount">check count%1$s</string>
 </resources>

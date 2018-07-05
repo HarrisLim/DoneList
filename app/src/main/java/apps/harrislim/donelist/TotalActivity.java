@@ -1,6 +1,7 @@
 package apps.harrislim.donelist;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -66,7 +67,9 @@ public class TotalActivity extends AppCompatActivity {
         labels.put(11, "Nov.");
         labels.put(12, "Dec.");
 
-        LineDataSet lineDataSet = new LineDataSet(entries, "성공한 횟수");
+        Resources res = getResources();
+        String text = String.format(res.getString(R.string.doneCount), "");
+        LineDataSet lineDataSet = new LineDataSet(entries, text);
         lineDataSet.setLineWidth(2);
         lineDataSet.setCircleRadius(6);
         lineDataSet.setCircleColor(Color.parseColor("#FFA1B4DC"));
@@ -100,24 +103,9 @@ public class TotalActivity extends AppCompatActivity {
 
         YAxis yLAxis = lineChart.getAxisLeft();
         yLAxis.setTextColor(Color.BLACK);
-        /*
-        if(max<=7){
-            yLAxis.setAxisMinimum(0f); // start at zero
-            yLAxis.setLabelCount(2);
-            yLAxis.setAxisMaximum(10f);
-        }else if(max<=17){
-            yLAxis.setAxisMinimum(0f); // start at zero
-            yLAxis.setLabelCount(4);
-            yLAxis.setAxisMaximum(20f);
-        }else{ // 18이상이라면
-            yLAxis.setAxisMinimum(0f); // start at zero
-            yLAxis.setLabelCount(7);
-            yLAxis.setAxisMaximum(35f);
-        }
-        */
         yLAxis.setAxisMinimum(0f); // start at zero
         yLAxis.setLabelCount(7);
-        yLAxis.setAxisMaximum(35f);
+        yLAxis.setAxisMaximum(33f);
 
         Description description = new Description();
         description.setText("");

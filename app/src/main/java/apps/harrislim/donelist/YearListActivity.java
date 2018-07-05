@@ -42,9 +42,6 @@ public class YearListActivity extends AppCompatActivity {
         lv.addFooterView(new View(this), null, true);
         for(int i=0; i<dayList.size(); i++){
             yearSet.add(pickYear(dayList.get(i)));
-//            Log.i("tag", "haha in M "+ pickYear(dayList.get(i)));
-//            Log.i("tag", "haha in MM "+ pickMonth(dayList.get(i)));
-//            Log.i("tag", "haha in MM "+ pickDay(dayList.get(i)));
             Log.i("tag", "haha in MonthList: "+dayList.get(i));
         }
         yearList = new ArrayList<String>(yearSet);
@@ -61,7 +58,7 @@ public class YearListActivity extends AppCompatActivity {
                 inte = new Intent(YearListActivity.this, TotalActivity.class);
                 countMonth(aa.getItem(position));
                 inte.putStringArrayListExtra("monthList", monthList); // 여기에 매 달 나오게하자.
-                inte.putExtra("title", aa.getItem(position)+"년");
+                inte.putExtra("title", aa.getItem(position));
                 startActivity(inte);
             }
         });
@@ -70,6 +67,7 @@ public class YearListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.i("tag", "dayList in YearListActivity: "+ dayList);
         clear();
         Log.i("tag", "onResume in YearListActivity");
     }
@@ -100,8 +98,6 @@ public class YearListActivity extends AppCompatActivity {
         for(int i=0; i<month.length; i++){
             monthList.add(month[i]+"");
         }
-//        monthList = new ArrayList<String>(Arrays.asList(month));
-//        for(String z: monthList) Log.i("tag", "test: "+ z);
     }
 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id){

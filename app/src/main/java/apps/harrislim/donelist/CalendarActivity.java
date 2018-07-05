@@ -18,8 +18,10 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 
 public class CalendarActivity extends AppCompatActivity implements View.OnClickListener {
@@ -41,35 +43,29 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
                 new SundayDecorator(),
                 new SaturdayDecorator(),
                 new OneDayDecorator());
-//        materialCalendarView.setSelectionMode(MaterialCalendarView.SELECTION_MODE_MULTIPLE);
         materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-
-//                boolean isDuplicate = isDuplicate(date);
-                if(isDuplicate(date)) {
-                    Log.i("tag", "겹침");
+                if(isDuplicate(date)) { // 빨간점 삭제
+                    Log.i("tag", "빨간점 삭제: "+ getDate(date));
                     result.remove(getDate(date));
-                    editor.remove(getDate(date));
-                    editor.commit();
-//                    Intent intent = new Intent(CalendarActivity.this, CalendarActivity.class);
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                    widget.refreshDrawableState();
-//                    materialCalendarView.refreshDrawableState();
-//                    materialCalendarView.invalidateDecorators();
-                    finish();
-                    startActivity(getIntent());
-                }
-                else {
-                    Log.i("tag", "안겹침");
-                    result.add(getDate(date));
-                    editor.putString(getDate(date), getDate(date));
-                    editor.commit();
-                    // 생성될 때 onResume에 안걸리고 ApiSimulator가 여기서 실행되니까
+                    editor.remove(getDate(date)).commit();
                     new ApiSimulator(result).executeOnExecutor(Executors.newSingleThreadExecutor());
+                    materialCalendarView.removeDecorators();
+                    materialCalendarView.addDecorators(
+                            new SundayDecorator(),
+                            new SaturdayDecorator(),
+                            new OneDayDecorator());
                 }
-                Log.i("tag", "hi: "+ calendarPre.getString(getDate(date),null));
-//                new ApiSimulator(result).executeOnExecutor(Executors.newSingleThreadExecutor());
+                else { // 빨간점 생성
+                    if(date!=null) {
+                        Log.i("tag", "빨간점 생성: " + getDate(date));
+                        result.add(getDate(date));
+                        editor.putString(getDate(date), getDate(date));
+                        editor.commit();
+                        new ApiSimulator(result).executeOnExecutor(Executors.newSingleThreadExecutor());
+                    }
+                }
             }
         });
     }
@@ -82,6 +78,7 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
         return false;
     }
     String getDate(CalendarDay date){
+        Log.i("tag", "date: "+ date);
         String str = date.toString();
         int a = str.indexOf("{");
         int b = str.indexOf("}");
@@ -104,17 +101,6 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
         calendarPre = getSharedPreferences(title, 0);
         editor= calendarPre.edit();
 
-//        String[] str = calendarPre.getAll();
-
-//        Log.i("tag", "getAll: "+calendarPre.getAll().size());
-//        Iterator<String> keys = calendarPre.getAll().keySet().iterator();
-//        while(keys.hasNext()){
-//            String key = keys.next();
-//            result.add(key);
-//        }
-
-//        calendarPre.getString(getDate(date),null);
-
         customizeCalendar();
     }
 
@@ -135,34 +121,24 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
     }
     @Override
     public void onResume(){
-        Log.i("tag", "이건 언제돼?");
-//        customizeCalendar();
-        Log.i("tag", "getAll: "+calendarPre.getAll().size());
+        Log.i("tag", "onResume in CalendarView");
         Iterator<String> keys = calendarPre.getAll().keySet().iterator();
         while(keys.hasNext()){
             String key = keys.next();
             result.add(key);
         }
         // 지울 때 onResume이 실행되니까 ApiSimulator를 여기에.
-        dayList.removeAll(dayList);
+        if(dayList!=null) dayList.removeAll(dayList);
         new ApiSimulator(result).executeOnExecutor(Executors.newSingleThreadExecutor());
         super.onResume();
     }
     private class ApiSimulator extends AsyncTask<Void, Void, List<CalendarDay>> {
         ArrayList<String> Time_Result;
-//        boolean isDuplicate;
-//        ApiSimulator(ArrayList<String> Time_Result, boolean isDuplicate){
         ApiSimulator(ArrayList<String> Time_Result){
             this.Time_Result = Time_Result;
-//            this.isDuplicate = isDuplicate;
         }
         @Override
         protected List<CalendarDay> doInBackground(@NonNull Void... voids) {
-//            try {
-//                Thread.sleep(500);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
             if (result.size() > 0) {
                 Calendar calendar = Calendar.getInstance();
                 ArrayList<CalendarDay> dates = new ArrayList<>();
@@ -188,35 +164,46 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
 
         @Override
         protected void onPostExecute(@NonNull List<CalendarDay> calendarDays) {
-            if(calendarDays==null)
-                Log.i("tag", "null이야");
-            else if(calendarDays!=null){
-                Log.i("tag", "null아니야 ");
-//                for(CalendarDay x: calendarDays) Log.i("tag", "calendarDays: "+ calendarDays);
-                Log.i("tag", "calendarDays: "+ calendarDays.size());
-            }
-            if(calendarDays!=null){
-                dayList.removeAll(dayList);
-                for(int i=1; i<calendarDays.size(); i++){ // 0은 null이 있어.
-//                    for(int j=0; j<dayList.size(); j++){
-//                        if(!(calendarDays.get(i).toString().equals(dayList.get(j)))){
-                            dayList.add(getDate(calendarDays.get(i)));
-//                        }
-//                    }
+            Set<CalendarDay> fooSet;
+            List<CalendarDay> fooList;
+
+            if(calendarDays!=null){ // 빨간 점이 1개 이상일 때만
+                // calendarDays내의 데이터 중복제거
+                fooSet = new HashSet<CalendarDay>(calendarDays);
+                Iterator<CalendarDay> keys = fooSet.iterator();
+                while(keys.hasNext()){
+                    CalendarDay key = keys.next();
+                    Log.i("tag"," key: " + key);
                 }
-                for(String d: dayList) Log.i("tag", "dddd: "+ d);
+                fooList = new ArrayList<CalendarDay>(fooSet);
+                for(int i=0; i<fooList.size(); i++){
+                    Log.i("tag", "foo: "+fooList.get(i));
+                }
+
+                if(calendarDays==null) {
+                    Log.i("tag", "null이야");
+                    Log.i("tag", "fooList: " + fooList);
+                    Log.i("tag", "calendarDays: "+ calendarDays);
+                }
+                else if(calendarDays!=null){
+                    Log.i("tag", "null아니야 ");
+                    Log.i("tag", "fooList.size(): "+ fooList.size());
+                            Log.i("tag", "calendarDays.size(): "+ calendarDays.size());
+                    Log.i("tag", "fooList: "+ fooList);
+                    Log.i("tag", "calendarDays: "+ calendarDays);
+                }
+
+                dayList.removeAll(dayList);
+                for(int i=1; i<fooList.size(); i++) // 0은 null이 있어.
+                    dayList.add(getDate(fooList.get(i)));
+
+                materialCalendarView.addDecorator(new EventDecorator(Color.RED, fooList, CalendarActivity.this));
             }
+
             super.onPostExecute(calendarDays);
             if (isFinishing()) {
                 return;
             }
-            if(calendarDays!=null) {// 빨간 점이 1개 이상일 때만
-//                Log.i("tag", "size: " + calendarDays.size());
-                materialCalendarView.addDecorator(new EventDecorator(Color.RED, calendarDays, CalendarActivity.this));
-            }
-//            }else if(isDuplicate){ // 겹치면
-//                materialCalendarView.addDecorator(new EventDecorator(Color.argb(00,00,00,00), calendarDays, CalendarActivity.this));
-//            }
         }
     }
 
