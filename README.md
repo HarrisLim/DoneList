@@ -4,7 +4,7 @@
   기록하고 확인하고 꾸준히 하는 힘을 기를 수 있다 :)<br>
   <br>
   <br>
-  ![Donelist](/github_image/donelist_gif.gif)
+  ![Donelist](/github_image/donelist.gif)
 <hr/>
 
 ### Version
