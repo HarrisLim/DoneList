@@ -1,10 +1,25 @@
-# Donelist [(Google Play)](https://play.google.com/store/apps/details?id=apps.harrislim.donelist)
-  Todo-list가 아닌, Done-list이다.<br>
-  앞으로 할 일이 아닌, 내가 한 일을 기록하면서 얼마나 해왔는지 확인하고 성취감을 느낄 수 있다.<br>
-  기록하고 확인하고 꾸준히 하는 힘을 기를 수 있다 :)<br>
-  <br>
-  <br>
+# [Donelist](https://play.google.com/store/apps/details?id=apps.harrislim.donelist)
+  "Just mark make you go to the goal" - HarrisLim<br>
+  Just mark somethings you did and check out whether running well or not !!<br>
+  It give you to power of untiring and motivation. <br>
+  <br><br>
   ![Donelist](/github_image/donelist.gif)
+  <br><br>
+  you can use this app easily because It's simple Design. <br>
+  <br>
+  I recommend to you how you use this app well.<br>
+    - add on list If you have something what you want to do steadily.
+    - ex, "exercise or study or something like it"
+  <br>
+  - how to use
+    1. click "+" button and enter the title you want to continue do something.
+    2. click the title you want and you can see calendar.
+    3. just mark, If you do something the day.
+    4. click statistics button, If you check out thing what you doing at a glance.
+
+  - how to delete the list
+    1. click the sawtooth button in the lower left.
+    2. you can delete when clicking the list while the sawtooth button's color is white.
 <hr/>
 
 ### Version
