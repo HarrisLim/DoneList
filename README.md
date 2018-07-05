@@ -24,9 +24,17 @@
 <hr/>
 
 ### Version
-  - android 17+
+  - android  17+
+  - Java  v9.0.4
+  - Gradle  v3.1.2
+  - Material-calendarview  v1.4.3
+  - MPAndroidChart  v3.0.2
+
+### Used technology
+  - Java
+  - SharedPreference ( Store data )
+  - XML ( Layout )
 
 ### Used Opensources
   - Calendar: [material-calendarView](https://github.com/prolificinteractive/material-calendarview)
   - Line chart: [MPAndroidChart](https://github.com/PhilJay/MPAndroidChart)
-
