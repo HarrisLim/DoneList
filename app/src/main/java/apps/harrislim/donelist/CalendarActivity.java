@@ -78,11 +78,11 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
         return false;
     }
     String getDate(CalendarDay date){
-        Log.i("tag", "date: "+ date);
+        Log.i("tag", "date: " + date);
         String str = date.toString();
         int a = str.indexOf("{");
         int b = str.indexOf("}");
-        str = str.substring(a+1, b);
+        str = str.substring(a + 1, b);
         return str;
     }
 
@@ -121,6 +121,7 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
     }
     @Override
     public void onResume(){
+        super.onResume();
         Log.i("tag", "onResume in CalendarView");
         Iterator<String> keys = calendarPre.getAll().keySet().iterator();
         while(keys.hasNext()){
@@ -130,7 +131,6 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
         // 지울 때 onResume이 실행되니까 ApiSimulator를 여기에.
         if(dayList!=null) dayList.removeAll(dayList);
         new ApiSimulator(result).executeOnExecutor(Executors.newSingleThreadExecutor());
-        super.onResume();
     }
     private class ApiSimulator extends AsyncTask<Void, Void, List<CalendarDay>> {
         ArrayList<String> Time_Result;
@@ -195,7 +195,8 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
 
                 dayList.removeAll(dayList);
                 for(int i=1; i<fooList.size(); i++) // 0은 null이 있어.
-                    dayList.add(getDate(fooList.get(i)));
+                    if(fooList.get(i)!=null)
+                        dayList.add(getDate(fooList.get(i)));
 
                 materialCalendarView.addDecorator(new EventDecorator(Color.RED, fooList, CalendarActivity.this));
             }

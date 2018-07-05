@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             public void onClick(View view) {
                 title = addList.getText().toString().trim();
-                if(title.length()>20) {
+                if(title.length()>15) {
                     Toast.makeText(MainActivity.this, R.string.limitString, Toast.LENGTH_SHORT).show();
                 } else if(hasDuplicate(title)){ // list 중복검사
                     Toast.makeText(MainActivity.this, R.string.unduplicatable, Toast.LENGTH_SHORT).show();

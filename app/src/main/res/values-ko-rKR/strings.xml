@@ -11,7 +11,7 @@
     <string name="undeletable">삭제 비활성화</string>
     <string name="statistics">통계</string>
     <string name="noticeInStat">* 표시한 연도만 보여줍니다</string>
-    <string name="limitString">20글자를 초과할 수 없습니다</string>
+    <string name="limitString">15글자를 초과할 수 없습니다</string>
     <string name="unduplicatable">중복되는 목록이 있습니다</string>
     <string name="add">%1$s 추가</string>
     <string name="DeleteTitle">알림</string>

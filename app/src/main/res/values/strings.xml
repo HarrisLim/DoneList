@@ -11,7 +11,7 @@
     <string name="undeletable">undeletable</string>
     <string name="statistics">Statistics</string>
     <string name="noticeInStat">* show the lists you checked</string>
-    <string name="limitString">limits 20 letter</string>
+    <string name="limitString">limits 15 letter</string>
     <string name="unduplicatable">the name is already on the list</string>
     <string name="add">added %1$s</string>
     <string name="DeleteTitle">Notice</string>
@@ -19,5 +19,5 @@
     <string name="no">no</string>
     <string name="yes">yes</string>
     <string name="confirmDeleting">deleted %1$s</string>
-    <string name="doneCount">check count%1$s</string>
+    <string name="doneCount">mark count%1$s</string>
 </resources>
