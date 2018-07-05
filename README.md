@@ -8,7 +8,7 @@
   you can use this app easily because It's simple Design. <br>
   <br>
   I recommend to you how you use this app well.<br>
-    - add on list If you have something what you want to do steadily.
+    - add on list If you have something what you want to do steadily.<br>
     - ex, "exercise or study or something like it"
   <br>
   - how to use
