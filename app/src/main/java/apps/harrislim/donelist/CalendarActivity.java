@@ -188,7 +188,7 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
                 else if(calendarDays!=null){
                     Log.i("tag", "null아니야 ");
                     Log.i("tag", "fooList.size(): "+ fooList.size());
-                            Log.i("tag", "calendarDays.size(): "+ calendarDays.size());
+                    Log.i("tag", "calendarDays.size(): "+ calendarDays.size());
                     Log.i("tag", "fooList: "+ fooList);
                     Log.i("tag", "calendarDays: "+ calendarDays);
                 }

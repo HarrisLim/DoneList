@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ArrayAdapter<String> aa;
     int positionIdx;
     void m2(){
-            items.removeAll(items);
+        items.removeAll(items);
         Iterator<String> keys = listPre.getAll().keySet().iterator();
         Log.i("tag", "listPre.size(): "+listPre.getAll().size());
         while(keys.hasNext()){
